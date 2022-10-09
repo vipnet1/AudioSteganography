@@ -10,7 +10,8 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": true,
+            "args": ["extract", "rito", "'Uajrh6QkXxKqPMlCa+kgBPN1BdAedVoVpBENfnIdOOfywLTka6dPBK0oZzwqIYJZ'"],
         }
     ]
 }
