@@ -3,6 +3,18 @@
 # Description
 Hide messsage inside audio file(WAV)
 
+commands:
+python main.py hide lsb_basic MESSAGE_TO_HIDE
+python main.py extract lsb_basic FILENAME
+
+python main.py hide lsb_key_based MESSAGE_TO_HIDE
+python main.py extract lsb_key_based FILENAME PERSONAL_KEY
+
+python main.py hide frequency_embedding MESSAGE_TO_HIDE
+python main.py extract frequency_embedding FILENAME PERSONAL_KEY
+
+currently suppose MESSAGE_TO_HIDE contains only ascii characters
+
 # End Description
   
 Create virtual env (as long you didn't deleted it, run it on time):  

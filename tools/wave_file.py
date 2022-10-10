@@ -47,15 +47,18 @@ class WaveFile:
         self.Subchunk2Size = int.from_bytes(self.__r_Subchunk2Size, byteorder='little', signed=False)
 
     def __perform_validations(self):
-        self.__problems = ''
+        self.problems = ''
 
         if self.ChunkSize != len(self.__fileContent) - 8:
-            self.__problems += 'Invalid file size - file may be corrupted|'
+            self.problems += 'Invalid file size - file may be corrupted|'
 
         expectedByteRate = self.SampleRate * self.NumChannels * self.BitsPerSample / 8;
         if expectedByteRate != self.ByteRate:
-            self.__problems += 'Invalid byte rate|'
+            self.problems += 'Invalid byte rate|'
 
         expectedBlockAlign = self.NumChannels * self.BitsPerSample / 8;
         if expectedBlockAlign != self.BlockAlign:
-            self.__problems += 'Invalid block align|'
+            self.problems += 'Invalid block align|'
+
+        if self.AudioFormat != 1:
+            self.problems += 'Not PCM file - probably compressed. Are you sure its a WAV file?|'
