@@ -29,6 +29,8 @@ def parse_algorithm():
         print('Wrong algorithm type')
         sys.exit(ERROR_WRONG_ARGUMENT)
 
+    return algorithm
+
 def parse_filename():
     if len(sys.argv) < 4:
         print('You must provide filename!')

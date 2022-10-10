@@ -8,10 +8,10 @@
             "name": "Python: текущий файл",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "main.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["extract", "rito", "'Uajrh6QkXxKqPMlCa+kgBPN1BdAedVoVpBENfnIdOOfywLTka6dPBK0oZzwqIYJZ'"],
+            "args": ["hide", "lsb_basic", "sounds/song.wav", "hi"],
         }
     ]
 }
