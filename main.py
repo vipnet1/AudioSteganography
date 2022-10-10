@@ -22,6 +22,7 @@ import steganography.frequency_embedding as frequency_embedding
 
 def handle_command_hide():
     algorithm = arguments_parser.parse_algorithm()
+    filename = arguments_parser.parse_filename()
 
     functions = {
         Algorithm.LSB_BASIC: lsb_basic.hide,
@@ -29,10 +30,11 @@ def handle_command_hide():
         Algorithm.FREQUENCY_EMBEDDING: frequency_embedding.hide
     }
 
-    functions[Algorithm[algorithm.upper()]]()
+    functions[Algorithm[algorithm.upper()]](filename)
 
 def handle_command_extract():
     algorithm = arguments_parser.parse_algorithm()
+    filename = arguments_parser.parse_filename()
 
     functions = {
         Algorithm.LSB_BASIC: lsb_basic.extract,
@@ -40,7 +42,7 @@ def handle_command_extract():
         Algorithm.FREQUENCY_EMBEDDING: frequency_embedding.extract
     }
 
-    functions[Algorithm[algorithm.upper()]]()
+    functions[Algorithm[algorithm.upper()]](filename)
 
 
 def main():

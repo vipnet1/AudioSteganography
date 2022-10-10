@@ -1,5 +1,5 @@
-def hide():
+def hide(filename):
     pass
 
-def extract():
+def extract(filename):
     pass

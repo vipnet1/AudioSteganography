@@ -1,5 +1,7 @@
-def hide():
-    pass
+import tools.arguments_parser as arguments_parser
 
-def extract():
+def hide(filename):
+    message = arguments_parser.parse_message()
+
+def extract(filename):
     pass
