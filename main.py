@@ -35,9 +35,9 @@ def handle_command_extract():
     algorithm = arguments_parser.parse_algorithm()
 
     functions = {
-        Algorithm.LSB_BASIC: lsb_basic.hide,
-        Algorithm.LSB_KEY_BASED: lsb_key_based.hide,
-        Algorithm.FREQUENCY_EMBEDDING: frequency_embedding.hide
+        Algorithm.LSB_BASIC: lsb_basic.extract,
+        Algorithm.LSB_KEY_BASED: lsb_key_based.extract,
+        Algorithm.FREQUENCY_EMBEDDING: frequency_embedding.extract
     }
 
     functions[Algorithm[algorithm.upper()]]()
