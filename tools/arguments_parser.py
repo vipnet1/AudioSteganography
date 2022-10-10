@@ -49,6 +49,10 @@ def parse_message():
         sys.exit(ERROR_NO_ARGUMENT)
 
     message = sys.argv[4]
+    if not message.isascii():
+        print('message may contain only ascii characters!')
+        sys.exit(ERROR_WRONG_ARGUMENT)
+
     return message
 
 def parse_personal_key():

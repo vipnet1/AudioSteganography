@@ -11,7 +11,7 @@
             "program": "main.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["hide", "lsb_basic", "sounds/song.wav", "hi"],
+            "args": ["extract", "lsb_basic", "sounds/lsb_basic_stego.wav"],
         }
     ]
 }

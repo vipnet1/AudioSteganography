@@ -10,7 +10,7 @@ class WaveFile:
         bin_data = self.__r_ChunkID + self.__r_ChunkSize + self.__r_Format + self.__r_Subchunk1ID + \
                    self.__r_Subchunk1Size + self.__r_AudioFormat + self.__r_NumChannels + self.__r_SampleRate + \
                    self.__r_ByteRate + self.__r_BlockAlign + self.__r_BitsPerSample + self.__r_Subchunk2ID + \
-                   self.__r_Subchunk2Size + self.r_data
+                   self.__r_Subchunk2Size + bytes(self.data)
 
         with open(dest_file, 'wb') as file:
             file.write(bin_data)
@@ -33,7 +33,7 @@ class WaveFile:
             self.__r_BitsPerSample = fileContent[34:36]
             self.__r_Subchunk2ID = fileContent[36:40]
             self.__r_Subchunk2Size = fileContent[40:44]
-            self.r_data = fileContent[44:]
+            self.__r_data = fileContent[44:]
 
     def __store_info(self):
         self.ChunkSize = int.from_bytes(self.__r_ChunkSize, byteorder='little', signed=False)
@@ -45,6 +45,7 @@ class WaveFile:
         self.BlockAlign = int.from_bytes(self.__r_BlockAlign, byteorder='little', signed=False)
         self.BitsPerSample = int.from_bytes(self.__r_BitsPerSample, byteorder='little', signed=False)
         self.Subchunk2Size = int.from_bytes(self.__r_Subchunk2Size, byteorder='little', signed=False)
+        self.data = bytearray(self.__r_data)
 
     def __perform_validations(self):
         self.problems = ''
