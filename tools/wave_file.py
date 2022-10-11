@@ -6,6 +6,18 @@ class WaveFile:
         self.__store_info()
         self.__perform_validations()
 
+    # use if also size of data block changed, else posssible just to work directly with self.data
+    def replace_data_block(self, new_data):
+        diff_num = len(new_data) - len(self.data)
+
+        self.data = new_data
+        self.ChunkSize += diff_num
+        self.Subchunk2Size += diff_num
+
+        self.__r_data = bytes(new_data)
+        self.__r_ChunkSize = self.ChunkSize.to_bytes(4, 'little')
+        self.__r_Subchunk2Size = self.Subchunk2Size.to_bytes(4, 'little')
+
     def save_file(self, dest_file):
         bin_data = self.__r_ChunkID + self.__r_ChunkSize + self.__r_Format + self.__r_Subchunk1ID + \
                    self.__r_Subchunk1Size + self.__r_AudioFormat + self.__r_NumChannels + self.__r_SampleRate + \
