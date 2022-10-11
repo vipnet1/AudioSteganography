@@ -2,18 +2,24 @@ import tools.arguments_parser as arguments_parser
 from tools.wave_file import WaveFile
 import core.common as common
 
-# lsb_basic alters lsb of least significant bytes sequently from beginning of data section. '#' character means
-# we extracted whole message.
-# Pros - no key needed because whole message located at the beginning.
-# Cons -  may be easier to notice change in audio all changes made in beginning of file. Also anyone holding file can recover message as there's no key
+"""
+lsb_basic alters lsb of least significant bytes sequently from beginning of data section.
+'#' character means we extracted whole message.
+
+Pros - no key needed because whole message located at the beginning.
+Cons -  may be easier to notice change in audio all changes made in beginning of file.
+        also anyone holding file can recover message as there's no key
+"""
 
 
-# data stored in little endian. BitsPerSample indicates how many bits for each audio sample. So - if we
-# want to store via lsb we need to be sure that we do it also in least significant byte.
-# for example if BitsPerSample=16 audio data stored in 2 bytes. It's little endian - so we want to alter
-# the lsb of byte 0,2,4... because they are least significant. This will make change unnoticeable for humans.
-# in message each character ascii so 1 byte - 8 bits. Every 8 bits we can build character. Lets suppose
-# if character is '#' means whole message extracted
+"""
+data stored in little endian. BitsPerSample indicates how many bits for each audio sample. So - if we
+want to store via lsb we need to be sure that we do it also in least significant byte.
+for example if BitsPerSample=16 audio data stored in 2 bytes. It's little endian - so we want to alter
+the lsb of byte 0,2,4... because they are least significant. This will make change unnoticeable for humans.
+in message each character ascii so 1 byte - 8 bits. Every 8 bits we can build character. Lets suppose
+if character is '#' means whole message extracted
+"""
 def hide(filename):
     message = arguments_parser.parse_message()
 

@@ -5,6 +5,20 @@ import json
 import random
 import core.constants as constants
 
+"""
+lsb_key_based alters lsb of least significant bytes - like lsb_basic, but the locations are generated randomly and
+not in sequence. Because of this randomized mechanism we can hide less data in the file than in lsb_basic.
+after hidding message we get list of locations of each bit of message characters - I put it inside an object
+serialize and base64 it and call it 'personal_key'. So to extract the data you need to provide this base64 key
+so we know where and in what order to extract each bit of the message
+
+Pros - file and key required to extract message - more secure.
+       also all changes aren't sequently but in random positions - harder to notice changes.
+
+Cons - can hide less data in same file(because of randomization).
+       as the 'personal_key' is just base64 of locations it will grow larger as the message to hide grows larger.
+"""
+
 def hide(filename):
     message = arguments_parser.parse_message()
 
