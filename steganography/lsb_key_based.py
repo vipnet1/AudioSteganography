@@ -36,11 +36,10 @@ def hide(filename):
     locations_list = []
 
     for _ in range(len(message_bits)):
-        found = False
-        while not found:
+        while True:
             byte_location = random.randint(0, max_gen_limit) * alter_every
             if byte_location not in locations_set:
-                found = True
+                break
 
         locations_set.add(byte_location)
         locations_list.append(byte_location)
