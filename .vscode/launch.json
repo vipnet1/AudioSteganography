@@ -11,7 +11,7 @@
             "program": "main.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["hide", "frequency_embedding", "sounds/test.wav", "Hi there"],
+            "args": ["extract", "frequency_embedding", "yo.wav", "Hi there"],
         }
     ]
 }

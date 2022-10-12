@@ -5,7 +5,6 @@ from enums.algorithm import Algorithm
 
 import steganography.lsb_basic as lsb_basic
 import steganography.lsb_key_based as lsb_key_based
-import steganography.frequency_embedding as frequency_embedding
 
 
 def handle_command_hide():
@@ -15,7 +14,6 @@ def handle_command_hide():
     functions = {
         Algorithm.LSB_BASIC: lsb_basic.hide,
         Algorithm.LSB_KEY_BASED: lsb_key_based.hide,
-        Algorithm.FREQUENCY_EMBEDDING: frequency_embedding.hide
     }
 
     functions[Algorithm[algorithm.upper()]](filename)
@@ -27,7 +25,6 @@ def handle_command_extract():
     functions = {
         Algorithm.LSB_BASIC: lsb_basic.extract,
         Algorithm.LSB_KEY_BASED: lsb_key_based.extract,
-        Algorithm.FREQUENCY_EMBEDDING: frequency_embedding.extract
     }
 
     functions[Algorithm[algorithm.upper()]](filename)
