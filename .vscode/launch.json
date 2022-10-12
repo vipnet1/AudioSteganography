@@ -11,7 +11,7 @@
             "program": "main.py",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["extract", "frequency_embedding", "yo.wav", "Hi there"],
+            "args": ["extract", "lsb_file", "rito.wav", "eyJiaXRzX2NvdW50IjogNjUwNCwgImZpbGVuYW1lIjogIlJFQURNRS5tZCJ9"],
         }
     ]
 }

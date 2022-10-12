@@ -48,7 +48,7 @@ def hide(filename):
         location = locations_list[index]
         file.data[location] = (file.data[location] & 254) | message_bits[index]
 
-    output_filename = common.get_output_filename()
+    output_filename = common.get_output_filename('lsb_key_based')
     file.save_file(output_filename)
 
     print('Successfully created new file with hidden message')
@@ -59,7 +59,7 @@ def hide(filename):
 
     personal_key = common.to_base64(json.dumps(personal_object))
 
-    key_filename = common.get_personal_key_filename()
+    key_filename = common.get_personal_key_filename('lsb_key_based')
     with open(key_filename, 'w') as file:
         file.write(personal_key)
 

@@ -2,12 +2,12 @@ import core.constants as constants
 from datetime import datetime
 import base64
 
-def get_output_filename():
-    filename = f'{constants.OUTPUT_FILE_PREFIX}{datetime.now()}.wav'
+def get_output_filename(tag):
+    filename = f'{constants.OUTPUT_FILE_PREFIX}_{tag}_{datetime.now()}.wav'
     return filename.replace(' ', '_').replace(':', '_')
 
-def get_personal_key_filename():
-    filename = f'{constants.OUTPUT_KEY_PREFIX}{datetime.now()}.key'
+def get_personal_key_filename(tag):
+    filename = f'{constants.OUTPUT_KEY_PREFIX}_{tag}_{datetime.now()}.key'
     return filename.replace(' ', '_').replace(':', '_')
 
 def to_base64(the_string):

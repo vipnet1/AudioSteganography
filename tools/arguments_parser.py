@@ -43,6 +43,18 @@ def parse_filename():
 
     return filename
 
+def parse_filename_to_hide():
+    if len(sys.argv) < 5:
+        print('You must provide filename to hide!')
+        sys.exit(ERROR_NO_ARGUMENT)
+
+    filename = sys.argv[4]
+    if not os.path.exists(filename):
+        print('File to hide not found!')
+        sys.exit(ERROR_WRONG_ARGUMENT)
+
+    return filename
+
 def parse_message():
     if len(sys.argv) < 5:
         print('You must provide message to hide!')

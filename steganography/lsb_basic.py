@@ -43,7 +43,7 @@ def hide(filename):
         file.data[data_index] = (file.data[data_index] & 254) | message_bits[index]
         data_index += alter_every
 
-    output_filename = common.get_output_filename()
+    output_filename = common.get_output_filename('lsb_basic')
     file.save_file(output_filename)
 
     print('Successfully created new file with hidden message')
