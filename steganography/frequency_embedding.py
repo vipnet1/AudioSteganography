@@ -32,7 +32,7 @@ def hide(filename):
     message_index = 0
     data_index = 0
     finished_hidding = False
-    last_embedded_index = 0
+    last_embedded_new_data_index = 0
 
     while data_index < len(file.data):
         can_embed = True
@@ -53,13 +53,17 @@ def hide(filename):
 
             channels_positivity[channel] = positivity
 
-        if finished_hidding or not can_embed or last_embedded_index + constants.FE_EMBED_EVERY_BYTES > data_index:
+        if finished_hidding or not can_embed or last_embedded_new_data_index + constants.FE_EMBED_EVERY_BYTES > len(new_data):
             continue
 
-        for samples_to_swap in [change_sign_samples - 1, change_sign_samples, 1]:
+        samples_to_swap_list = [change_sign_samples - 1, change_sign_samples, 1]
+
+        for index in range(len(samples_to_swap_list)):
+            samples_to_swap = samples_to_swap_list[index]
+
             for _ in range(samples_to_swap):
                 for channel_num in range(file.NumChannels):
-                    # in non significan bytes use all 8 bits to hide message
+                    # if non significan bytes use all 8 bits to hide message
                     for _ in range(bytes_per_sample - 1):
                         if finished_hidding: # if finished hidding data store zeros for now, we will stop at the while loop
                             byte_data = int('0'*8, 2)
@@ -83,11 +87,15 @@ def hide(filename):
                     new_data.append(byte_data)
                     message_index += 7
             
+            # dont switch positivity if returned to initial positivity
+            if index == len(samples_to_swap_list) - 1:
+                continue
+
             # switch channels positivity
             for chan_num in range(file.NumChannels):
-                channels_positivity[chan_num] =  Positivity.NEGATIVE if channels_positivity[chan_num] == Positivity.POSITIVE else Positivity.NEGATIVE
+                channels_positivity[chan_num] =  Positivity.NEGATIVE if channels_positivity[chan_num] == Positivity.POSITIVE else Positivity.POSITIVE
             
-        last_embedded_index = data_index
+        last_embedded_new_data_index = len(new_data)
 
     if not finished_hidding:
         print('Cant hide whole message in the sound file')
@@ -103,4 +111,67 @@ def hide(filename):
     
 
 def extract(filename):
-    pass
+    file = WaveFile(filename)
+
+    change_sign_samples = int((file.SampleRate / constants.FE_FREQUENCY_TO_EMBED) / 2)
+    if change_sign_samples < 1:
+        print(f'Sample rate is {file.SampleRate}. Cant extract hidden waves for desired frequency')
+        return
+
+    bytes_per_sample = int(file.BitsPerSample / 8)
+
+    channels_positivity = [] # 0 means any, 1 positive, -1 negative
+    for _ in range(file.NumChannels):
+        channels_positivity.append(Positivity.NEUTRAL)
+
+    data_index = 0
+    last_extracted_index = 0
+
+    message = ''
+    message_bits = ''
+
+    while data_index < len(file.data):
+        can_extract = True
+
+        for channel in range(file.NumChannels):
+            # get over smaller bytes
+            data_index += bytes_per_sample - 1
+
+            # we are on significant byte of sample
+            positivity = Positivity.POSITIVE if file.data[data_index] < 128 else Positivity.NEGATIVE
+            if channels_positivity[channel].value == positivity:
+                can_extract = False
+
+            data_index += 1
+
+            channels_positivity[channel] = positivity
+
+        if not can_extract or last_extracted_index + constants.FE_EMBED_EVERY_BYTES > data_index:
+            continue
+
+        for samples_to_swap in [change_sign_samples - 1, change_sign_samples, 1]:
+            for _ in range(samples_to_swap):
+                for _ in range(file.NumChannels):
+                    # if non significan bytes all 8 bits are of message
+                    for _ in range(bytes_per_sample - 1):
+                        message_bits += bin(file.data[data_index]).lstrip('0b').rjust(8, '0')
+                        data_index += 1
+
+                    # if significant byte extract just 7 bits(not most significant)
+                    message_bits += bin(file.data[data_index]).lstrip('0b')[-7:].rjust(7, '0')
+                    data_index += 1
+            
+        last_extracted_index = data_index
+
+        while len(message_bits) >= 8:
+            character_bits = message_bits[0:8]
+            ch = chr(int(character_bits, 2))
+
+            if ch == '#':
+                print(f'Successfully extracted the message - {message}')
+                return
+
+            message += ch
+            message_bits = message_bits[8:]
+
+    print('Couldnt extract the message')
