@@ -83,7 +83,7 @@ def hide(filename):
                         continue
 
                     # if significant byte use 7 bits to store message, and most significant for frequency
-                    byte_data = int('0' if channels_positivity[channel_num] == Positivity.POSITIVE else '1' + "".join(str(bit) for bit in message_bits[message_index : message_index + 7]).ljust(7,'0'), 2)
+                    byte_data = int(('0' if channels_positivity[channel_num] == Positivity.POSITIVE else '1') + "".join(str(bit) for bit in message_bits[message_index : message_index + 7]).ljust(7,'0'), 2)
                     new_data.append(byte_data)
                     message_index += 7
             
