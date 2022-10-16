@@ -88,6 +88,10 @@ def hide(filename):
                 channels_positivity[chan_num] =  Positivity.NEGATIVE if channels_positivity[chan_num] == Positivity.POSITIVE else Positivity.NEGATIVE
             
         last_embedded_index = data_index
+
+    if not finished_hidding:
+        print('Cant hide whole message in the sound file')
+        return
             
 
     file.replace_data_block(bytearray(new_data))
