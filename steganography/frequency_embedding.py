@@ -32,7 +32,9 @@ def hide(filename):
     message_index = 0
     data_index = 0
     finished_hidding = False
-    last_embedded_new_data_index = 0
+
+    last_embedded_sample = 0
+    current_sample = 0
 
     while data_index < len(file.data):
         can_embed = True
@@ -53,7 +55,8 @@ def hide(filename):
 
             channels_positivity[channel] = positivity
 
-        if finished_hidding or not can_embed or last_embedded_new_data_index + constants.FE_EMBED_EVERY_BYTES > len(new_data):
+        if finished_hidding or not can_embed or last_embedded_sample + constants.FE_EMBED_EVERY_SAMPLES > current_sample:
+            current_sample += 1
             continue
 
         samples_to_swap_list = [change_sign_samples - 1, change_sign_samples, 1]
@@ -95,7 +98,8 @@ def hide(filename):
             for chan_num in range(file.NumChannels):
                 channels_positivity[chan_num] =  Positivity.NEGATIVE if channels_positivity[chan_num] == Positivity.POSITIVE else Positivity.POSITIVE
             
-        last_embedded_new_data_index = len(new_data)
+        last_embedded_sample = current_sample
+        current_sample += 1
 
     if not finished_hidding:
         print('Cant hide whole message in the sound file')
@@ -125,10 +129,12 @@ def extract(filename):
         channels_positivity.append(Positivity.NEUTRAL)
 
     data_index = 0
-    last_extracted_index = 0
 
     message = ''
     message_bits = ''
+
+    last_embedded_sample = 0
+    current_sample = 0
 
     while data_index < len(file.data):
         can_extract = True
@@ -146,7 +152,8 @@ def extract(filename):
 
             channels_positivity[channel] = positivity
 
-        if not can_extract or last_extracted_index + constants.FE_EMBED_EVERY_BYTES > data_index:
+        if not can_extract or last_embedded_sample + constants.FE_EMBED_EVERY_SAMPLES > current_sample:
+            current_sample += 1
             continue
 
         for samples_to_swap in [change_sign_samples - 1, change_sign_samples, 1]:
@@ -161,7 +168,8 @@ def extract(filename):
                     message_bits += bin(file.data[data_index]).lstrip('0b')[-7:].rjust(7, '0')
                     data_index += 1
             
-        last_extracted_index = data_index
+        last_embedded_sample = current_sample
+        current_sample += 1
 
         while len(message_bits) >= 8:
             character_bits = message_bits[0:8]
