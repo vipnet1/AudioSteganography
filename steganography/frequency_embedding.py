@@ -16,7 +16,7 @@ def hide(filename):
 
     file = WaveFile(filename)
 
-    change_sign_samples = int((file.SampleRate / constants.FREQUENCY_TO_EMBED) / 2)
+    change_sign_samples = int((file.SampleRate / constants.FE_FREQUENCY_TO_EMBED) / 2)
     if change_sign_samples < 1:
         print(f'Sample rate is {file.SampleRate}. Cant embed hidden waves for desired frequency')
         return
@@ -32,6 +32,8 @@ def hide(filename):
     message_index = 0
     data_index = 0
     finished_hidding = False
+    last_embedded_index = 0
+
     while data_index < len(file.data):
         can_embed = True
 
@@ -51,14 +53,15 @@ def hide(filename):
 
             channels_positivity[channel] = positivity
 
-        if finished_hidding or not can_embed:
+        if finished_hidding or not can_embed or last_embedded_index + constants.FE_EMBED_EVERY_BYTES > data_index:
             continue
 
         for samples_to_swap in [change_sign_samples - 1, change_sign_samples, 1]:
             for _ in range(samples_to_swap):
                 for channel_num in range(file.NumChannels):
+                    # in non significan bytes use all 8 bits to hide message
                     for _ in range(bytes_per_sample - 1):
-                        if finished_hidding:
+                        if finished_hidding: # if finished hidding data store zeros for now, we will stop at the while loop
                             byte_data = int('0'*8, 2)
                             new_data.append(byte_data)
                             continue
@@ -69,30 +72,30 @@ def hide(filename):
 
                         if message_index >= len(message_bits): finished_hidding = True
 
+                    # even if finished hidding we want to maintain frequency and later continue with original sound
                     if finished_hidding:
                         byte_data = int('0' if channels_positivity[channel_num] == Positivity.POSITIVE else '1' + '0'*7, 2)
                         new_data.append(byte_data)
                         continue
 
+                    # if significant byte use 7 bits to store message, and most significant for frequency
                     byte_data = int('0' if channels_positivity[channel_num] == Positivity.POSITIVE else '1' + "".join(str(bit) for bit in message_bits[message_index : message_index + 7]).ljust(7,'0'), 2)
                     new_data.append(byte_data)
                     message_index += 7
             
-            # switch positivity
-            channels_positivity[channel_num] =  Positivity.NEGATIVE if channels_positivity[channel_num] == Positivity.POSITIVE else Positivity.NEGATIVE
-
+            # switch channels positivity
+            for chan_num in range(file.NumChannels):
+                channels_positivity[chan_num] =  Positivity.NEGATIVE if channels_positivity[chan_num] == Positivity.POSITIVE else Positivity.NEGATIVE
+            
+        last_embedded_index = data_index
             
 
-            
+    file.replace_data_block(bytearray(new_data))
 
-        
-
-    file.replace_data_block(new_data)
-
-    output_filename = common.get_output_filename('lsb_basic')
+    output_filename = common.get_output_filename('frequency_embedding')
     file.save_file(output_filename)
 
-    print('yo')
+    print('Successfully created new file with hidden message')
     
 
 def extract(filename):
