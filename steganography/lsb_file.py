@@ -3,6 +3,13 @@ from tools.wave_file import WaveFile
 import core.common as common
 import json
 
+"""
+lsb_file follows same logic as lsb_basic but bits to hide are taken from file to hide and not message.
+We hide data in sequence and generate a key(base64 of object containing original file name and amount of bits to extract
+from file).
+
+Extract by providing the wav file with the hidden data and the key
+"""
 
 def hide(filename):
     filename_to_hide = arguments_parser.parse_filename_to_hide()

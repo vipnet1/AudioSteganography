@@ -13,6 +13,9 @@ python main.py extract lsb_key_based FILENAME PERSONAL_KEY
 python main.py hide lsb_file FILENAME FILE_TO_HIDE
 python main.py extract lsb_file FILENAME PERSONAL_KEY
 
+python main.py hide frequency_embedding FILENAME MESSAGE_TO_HIDE
+python main.py extract frequency_embedding FILENAME
+
 currently suppose MESSAGE_TO_HIDE contains only ascii characters
 
 # End Description

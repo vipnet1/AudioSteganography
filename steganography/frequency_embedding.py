@@ -4,6 +4,24 @@ import core.constants as constants
 from enums.positivity import Positivity
 import core.common as common
 
+"""
+frequency_embedding is an invented algorithm. We find the points were audio wave finished(swap from positive to negative or
+vise versa) and embed wave in frequency that humans can't hear. Because of this the volume isn't important as we can't hear it
+anyway so we use the volume bits to store the message bits. For example if BitsPerSample is 16 we use 15 of bits to store
+message and most signiificant remains for frequency.
+
+For example if SampleRate is 44100 so -> 44100 / 22050 = 2 -> what means if we finish audio wave in two samples human
+can't hear it. And we use this technique to hide the message.
+
+There may be case when we can't embed waves of desired frequency so in this case this method will not work.
+
+This method increases file size.
+
+The points where we embed the wave are where all channels close their old wave(positive becomes negative or vise versa for
+all channels). At this point we embed the wave. We wait FE_EMBED_EVERY_SAMPLES samples before doing so again to not
+make it noticeable.
+"""
+
 def hide(filename):
     message = arguments_parser.parse_message()
 
@@ -171,6 +189,7 @@ def extract(filename):
         last_embedded_sample = current_sample
         current_sample += 1
 
+        # try build characters from extracted bits
         while len(message_bits) >= 8:
             character_bits = message_bits[0:8]
             ch = chr(int(character_bits, 2))
