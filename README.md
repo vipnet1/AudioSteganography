@@ -18,6 +18,7 @@ python main.py extract frequency_embedding FILENAME
   
 currently suppose MESSAGE_TO_HIDE contains only ascii characters  
   
+Creators: Timur Pichkhadze, 2022 Netanya Academic College Final Project.
 # End Description
   
 Create virtual env (as long you didn't deleted it, run it on time):  
